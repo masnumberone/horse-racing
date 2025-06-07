@@ -46,6 +46,11 @@ struct RaceHistoryScreen: View {
                         }
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Запросить PUSH") {
+                        vm.requestPushPermission()
+                    }
+                }
             }
         }
     }

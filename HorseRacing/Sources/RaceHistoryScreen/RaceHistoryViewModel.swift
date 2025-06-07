@@ -7,6 +7,7 @@
 
 import Foundation
 import Sharing
+import SwiftUI
 
 @Observable
 class RaceHistoryViewModel {
@@ -31,5 +32,19 @@ class RaceHistoryViewModel {
  
     func clearHistory() {
         $raceHistory.withLock { $0.removeAll() }
+    }
+    
+    func requestPushPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { result, error in
+            if let error  {
+                print("Ошибка при запросе разрешения: \(error.localizedDescription)")
+                return
+            }
+            print("Разрешение предоставлено: \(result)")
+            guard result else { return }
+            Task { @MainActor in
+                UIApplication.shared.registerForRemoteNotifications()
+            }
+        }
     }
 }
